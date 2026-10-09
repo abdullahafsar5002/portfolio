@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Play &mdash; Code Quest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=Instrument+Sans:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="learn.css">
+</head>
+<body>
+
+<nav class="lnav">
+  <a href="learn.html" class="brand">Code Quest</a>
+  <div class="lnav-right">
+    <span class="xp-chip">XP <b id="xpNow">0</b></span>
+    <button class="theme-toggle" type="button" data-theme-toggle aria-pressed="false" aria-label="Switch colour theme">
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+    </button>
+  </div>
+</nav>
+
+<div class="play">
+
+  <!-- -- level rail --------------------------------------- -->
+  <aside class="rail" id="rail">
+    <button class="rail-back" type="button" id="railBack">&larr; Tracks</button>
+    <h2 class="rail-title" id="railTitle">JavaScript</h2>
+    <ol class="rail-list" id="railList"></ol>
+  </aside>
+
+  <!-- -- main ---------------------------------------------- -->
+  <main class="stage">
+    <div class="stage-head">
+      <span class="stage-tag" id="stageTag">Level 1</span>
+      <h1 class="stage-title" id="stageTitle"></h1>
+      <p class="stage-brief" id="stageBrief"></p>
+      <p class="stage-teaches" id="stageTeaches"></p>
+      <div class="stage-actions">
+        <button class="btn-hint" type="button" id="hintBtn">Show hint</button>
+        <span class="hint-text" id="hintText"></span>
+      </div>
+    </div>
+
+    <div class="work-area" id="workArea">
+
+      <!-- JS / SQL / HTML share a code editor -->
+      <div class="pane pane-editor">
+        <div class="pane-label">
+          <span>Your code</span>
+          <button class="mini" type="button" id="resetCode">Reset</button>
+        </div>
+        <textarea id="code" spellcheck="false" autocomplete="off" autocapitalize="off" autocorrect="off"></textarea>
+      </div>
+
+      <div class="pane pane-out">
+        <div class="pane-label"><span id="outLabel">Console</span></div>
+        <pre id="out" class="out">Press Run to see the output.</pre>
+        <div class="preview-frame-wrap" id="previewWrap" hidden>
+          <iframe id="preview" sandbox="allow-scripts" title="Live preview"></iframe>
+        </div>
+        <div class="table-wrap" id="tableWrap" hidden></div>
+      </div>
+
+      <!-- Logic track uses blocks instead -->
+      <div class="pane pane-blocks" id="blockPane" hidden>
+        <div class="pane-label"><span>Blocks - drag into the run area</span></div>
+        <div class="block-source" id="blockSource"></div>
+        <div class="block-drop" id="blockDrop"></div>
+      </div>
+
+    </div>
+
+    <div class="run-bar">
+      <button class="btn-run" type="button" id="runBtn">Run &#9654;</button>
+      <button class="btn-next" type="button" id="nextBtn" hidden>Next level &rarr;</button>
+    </div>
+
+    <div class="checks" id="checks"></div>
+  </main>
+</div>
+
+<footer>
+  <span>Code Quest</span>
+  <span id="progressNote"></span>
+</footer>
+
+<script src="../script.js"></script>
+<script src="levels.js?v=8"></script>
+<script src="levels-js.js?v=3"></script>
+<script src="levels-logic.js?v=1"></script>
+<script src="levels-web.js?v=1"></script>
+<script src="levels-sql.js?v=1"></script>
+<script src="engine.js?v=8"></script>
+<script>
+(function () {
+  'use strict';
+
+  var E = window.LearnEngine;
+  var trackId = new URLSearchParams(location.search).get('track') || 'js';
+  var track = TRACKS[trackId] || TRACKS.js;
+  if (!TRACKS[trackId]) trackId = 'js';
+
+  var isLogic = trackId === 'logic';
+  var isWeb = trackId === 'web';
+  var isSql = trackId === 'sql';
+
+  var el = {
+    rail: document.getElementById('rail'),
+    railTitle: document.getElementById('railTitle'),
+    railList: document.getElementById('railList'),
+    railBack: document.getElementById('railBack'),
+    tag: document.getElementById('stageTag'),
+    title: document.getElementById('stageTitle'),
+    brief: document.getElementById('stageBrief'),
+    teaches: document.getElementById('stageTeaches'),
+    hintBtn: document.getElementById('hintBtn'),
+    hintText: document.getElementById('hintText'),
+    code: document.getElementById('code'),
+    out: document.getElementById('out'),
+    outLabel: document.getElementById('outLabel'),
+    previewWrap: document.getElementById('previewWrap'),
+    preview: document.getElementById('preview'),
+    tableWrap: document.getElementById('tableWrap'),
+    blockPane: document.getElementById('blockPane'),
+    blockSource: document.getElementById('blockSource'),
+    blockDrop: document.getElementById('blockDrop'),
+    run: document.getElementById('runBtn'),
+    next: document.getElementById('nextBtn'),
+    resetCode: document.getElementById('resetCode'),
+    checks: document.getElementById('checks'),
+    xp: document.getElementById('xpNow'),
+    note: document.getElementById('progressNote')
+  };
+
+  var current = 0;
+  var blockSeq = [];
+
+  function saveKey(t, i) { return 'aa-code-' + t + '-' + i; }
+
+  function findOpenLevel() {
+    for (var i = 0; i < track.levels.length; i++) {
+      if (!E.state.done[track.levels[i].id]) return i;
+    }
+    return track.levels.length - 1;
+  }
+
+  function renderRail() {
+    el.railTitle.textContent = track.name;
+    el.railList.innerHTML = '';
+    track.levels.forEach(function (lv, i) {
+      var open = E.isUnlocked(trackId, i);
+      var done = !!E.state.done[lv.id];
+      var li = document.createElement('li');
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'rail-item' + (i === current ? ' is-current' : '') +
+                      (done ? ' is-done' : '') + (open ? '' : ' is-locked');
+      btn.disabled = !open;
+      btn.innerHTML = '<span class="ri-num">' + (i + 1) + '</span>' +
+                      '<span class="ri-name"></span>' +
+                      '<span class="ri-mark">' + (done ? '&#10003;' : open ? '' : '&#128274;') + '</span>';
+      btn.querySelector('.ri-name').textContent = lv.title;
+      btn.addEventListener('click', function () { load(i); });
+      li.appendChild(btn);
+      el.railList.appendChild(li);
+    });
+    var prog = E.trackProgress(trackId);
+    el.note.textContent = prog.done + ' of ' + prog.total + ' in ' + track.name;
+  }
+
+  function load(i) {
+    if (!E.isUnlocked(trackId, i)) return;
+    current = i;
+    var lv = track.levels[i];
+
+    el.tag.textContent = (isLogic ? 'Level ' : 'Level ') + (i + 1) + ' of ' + track.levels.length;
+    el.title.textContent = lv.title;
+    el.brief.innerHTML = lv.brief;
+    el.teaches.innerHTML = lv.teaches ? lv.teaches : '';
+    el.teaches.hidden = !lv.teaches;
+    el.hintText.textContent = '';
+    el.hintBtn.hidden = !lv.hint;
+
+    el.checks.innerHTML = '';
+    el.next.hidden = true;
+    el.out.textContent = 'Press Run to see the output.';
+    el.previewWrap.hidden = !isWeb;
+    el.tableWrap.hidden = !isSql;
+    el.blockPane.hidden = !isLogic;
+    document.querySelector('.pane-editor').hidden = isLogic;
+    el.outLabel.textContent = isSql ? 'Rows returned' : 'Console';
+
+    if (isLogic) {
+      blockSeq = [];
+      renderBlocks(lv);
+      el.out.textContent = 'Build your blocks, then press Run.';
+    } else {
+      el.code.value = localStorage.getItem(saveKey(trackId, i)) || lv.starter || '';
+    }
+
+    renderRail();
+    window.scrollTo(0, 0);
+  }
+
+  /* ---------- logic blocks ----------
+     Click a block to append it, or drag it. Click a placed block to
+     remove it. No prompt() dialogs: they broke the drop interaction and
+     are a poor fit for someone who has never coded. */
+  function defaultsFor(kind) {
+    switch (kind) {
+      case 'set':      return { name: 'score', value: '10' };
+      case 'add':      return { name: 'score', by: '5' };
+      case 'print':    return { value: 'hello' };
+      case 'printvar': return { name: 'score' };
+      case 'if':       return { left: 'score', right: '5' };
+      case 'repeat':   return { count: '3', value: 'go' };
+      case 'foreach':  return { items: ['apple', 'banana', 'mango'] };
+      default:         return {};
+    }
+  }
+
+  function renderBlocks(lv) {
+    el.blockSource.innerHTML = '';
+    lv.blocks.forEach(function (b) {
+      var node = document.createElement('button');
+      node.type = 'button';
+      node.className = 'block';
+      node.setAttribute('draggable', 'true');
+      node.dataset.kind = b.kind;
+      node.textContent = b.label;
+      node.title = 'Click to add, or drag it into the run area';
+
+      node.addEventListener('dragstart', function (e) {
+        try { e.dataTransfer.setData('text/plain', b.kind); } catch (err) {}
+        try { e.dataTransfer.effectAllowed = 'copy'; } catch (err) {}
+        node.classList.add('is-dragging');
+      });
+      node.addEventListener('dragend', function () { node.classList.remove('is-dragging'); });
+      node.addEventListener('click', function () { addBlock(b.kind); });
+
+      el.blockSource.appendChild(node);
+    });
+    renderDrop();
+  }
+
+  function addBlock(kind) {
+    var lv = track.levels[current];
+    var def = null;
+    for (var i = 0; i < lv.blocks.length; i++) {
+      if (lv.blocks[i].kind === kind) { def = lv.blocks[i]; break; }
+    }
+    if (!def) return;
+
+    var item = defaultsFor(kind);
+    item.kind = kind;
+    item.label = def.label;
+    blockSeq.push(item);
+    renderDrop();
+  }
+
+  el.blockDrop.addEventListener('dragover', function (e) {
+    e.preventDefault();
+    try { e.dataTransfer.dropEffect = 'copy'; } catch (err) {}
+    el.blockDrop.classList.add('is-over');
+  });
+  el.blockDrop.addEventListener('dragleave', function () {
+    el.blockDrop.classList.remove('is-over');
+  });
+  el.blockDrop.addEventListener('drop', function (e) {
+    e.preventDefault();
+    el.blockDrop.classList.remove('is-over');
+    var kind = '';
+    try { kind = e.dataTransfer.getData('text/plain') || ''; } catch (err) {}
+    if (!kind) return;
+    addBlock(kind);
+  });
+
+  function renderDrop() {
+    el.blockDrop.innerHTML = '';
+    if (!blockSeq.length) {
+      var msg = document.createElement('p');
+      msg.className = 'drop-msg';
+      msg.textContent = 'Click a block above, or drag one in here';
+      el.blockDrop.appendChild(msg);
+      return;
+    }
+    blockSeq.forEach(function (item, i) {
+      var node = document.createElement('div');
+      node.className = 'block block--placed';
+      var label = document.createElement('span');
+      label.textContent = describe(item);
+      var del = document.createElement('button');
+      del.type = 'button';
+      del.className = 'block-x';
+      del.setAttribute('aria-label', 'Remove this block');
+      del.textContent = 'x';
+      del.addEventListener('click', function (ev) {
+        ev.stopPropagation();
+        blockSeq.splice(i, 1);
+        renderDrop();
+      });
+      node.appendChild(label);
+      node.appendChild(del);
+      el.blockDrop.appendChild(node);
+    });
+    var gen = document.createElement('pre');
+    gen.className = 'block-gen';
+    gen.textContent = toJs(blockSeq);
+    el.blockDrop.appendChild(gen);
+  }
+
+  function describe(item) {
+    switch (item.kind) {
+      case 'set': return 'set ' + item.name + ' = ' + item.value;
+      case 'add': return 'add ' + item.by + ' to ' + item.name;
+      case 'print': return 'print "' + item.value + '"';
+      case 'printvar': return 'print ' + item.name;
+      case 'if': return 'if ' + item.left + ' > ' + item.right;
+      case 'repeat': return 'repeat ' + item.count + ' times: print "' + item.value + '"';
+      case 'foreach': return 'for each of 3 items: print item';
+      default: return item.label;
+    }
+  }
+
+  function toJs(seq) {
+    var lines = [];
+    seq.forEach(function (item) {
+      switch (item.kind) {
+        case 'set': lines.push('let ' + item.name + ' = ' + Number(item.value) + ';'); break;
+        case 'add': lines.push(item.name + ' = ' + item.name + ' + ' + Number(item.by) + ';'); break;
+        case 'print': lines.push('console.log("' + item.value + '");'); break;
+        case 'printvar': lines.push('console.log(' + item.name + ');'); break;
+        case 'if': lines.push('if (' + item.name + ' > ' + Number(item.right) + ') { /* ... */ }'); break;
+        case 'repeat': lines.push('for (let i = 0; i < ' + Number(item.count) + '; i++) console.log("' + item.value + '");'); break;
+        case 'foreach': lines.push('["apple","banana","mango"].forEach(x => console.log(x));'); break;
+      }
+    });
+    return lines.join('\n');
+  }
+
+  /* ---------- running ---------- */
+  function run() {
+    var lv = track.levels[current];
+    el.run.disabled = true;
+    el.run.textContent = 'Running...';
+
+    if (isLogic) { runLogicLevel(lv); return; }
+    if (isSql) { runSqlLevel(lv); return; }
+    if (isWeb) { runWebLevel(lv); return; }
+    runJsLevel(lv);
+  }
+
+  function done(res) {
+    el.run.disabled = false;
+    el.run.innerHTML = 'Run &#9654;';
+    renderRail();
+    el.xp.textContent = E.totalXpEarned();
+  }
+
+  function showChecks(results, crash) {
+    el.checks.innerHTML = '';
+    if (crash) {
+      var box = document.createElement('div');
+      box.className = 'check check--crash';
+      box.innerHTML = '<span class="ck-icon">!</span><div><strong>Your code stopped with an error</strong><p class="ck-msg"></p></div>';
+      box.querySelector('.ck-msg').textContent = crash;
+      el.checks.appendChild(box);
+      return;
+    }
+    results.forEach(function (r) {
+      var row = document.createElement('div');
+      row.className = 'check ' + (r.pass ? 'is-pass' : 'is-fail');
+      var icon = document.createElement('span');
+      icon.className = 'ck-icon';
+      icon.textContent = r.pass ? '\u2713' : '\u2717';
+      var body = document.createElement('div');
+      var name = document.createElement('strong');
+      name.textContent = r.name;
+      body.appendChild(name);
+      if (!r.pass) {
+        var why = document.createElement('p');
+        why.className = 'ck-msg';
+        why.textContent = r.err ? (r.fail + ' (' + r.err + ')') : r.fail;
+        body.appendChild(why);
+      }
+      row.appendChild(icon);
+      row.appendChild(body);
+      el.checks.appendChild(row);
+    });
+  }
+
+  function finishLevel(lv, allPass, msg) {
+    if (allPass) {
+      var first = E.complete(trackId, lv.id, lv.xp);
+      showChecks([{ name: 'Level complete' + (first ? '  +' + lv.xp + ' XP' : '  (already done)'), pass: true }], null);
+      if (first) {
+        el.out.textContent += (el.out.textContent.trim() ? '\n' : '') + '\n*** +' + lv.xp + ' XP ***';
+      }
+      var isLast = current === track.levels.length - 1;
+      if (!isLast) { el.next.hidden = false; }
+      else { el.next.textContent = 'Back to tracks'; }
+    } else {
+      showChecks(lv.tests || lv.checks || [], null);
+      if (msg) el.out.textContent = msg;
+    }
+  }
+
+  function runJsLevel(lv) {
+    localStorage.setItem(saveKey(trackId, current), el.code.value);
+    E.runJs(el.code.value, lv.tests, { async: !!lv.async }).then(function (r) {
+      done(r);
+      el.out.textContent = r.crash
+        ? 'Error: ' + r.crash
+        : (r.out.length ? r.out.join('\n') : '(nothing printed)');
+      finishLevel(lv, r.ok && r.results.every(function (x) { return x.pass; }) && r.results.length > 0);
+    });
+  }
+
+  function runWebLevel(lv) {
+    localStorage.setItem(saveKey(trackId, current), el.code.value);
+    E.runWeb(el.code.value, lv.checks).then(function (r) {
+      done(r);
+      el.preview.srcdoc =
+        '<!DOCTYPE html><html><head><meta charset="utf-8"><style>' +
+        'body{font-family:system-ui,sans-serif;padding:16px;margin:0;color:#111;background:#fff}' +
+        'img{max-width:100%}' +
+        '</style></head><body>' + (r.html || el.code.value) + '</body></html>';
+      el.out.textContent = r.crash ? 'Error: ' + r.crash : 'Rendered on the right.';
+      finishLevel(lv, r.ok && r.results.length > 0 && r.results.every(function (x) { return x.pass; }));
+    });
+  }
+
+  function runSqlLevel(lv) {
+    localStorage.setItem(saveKey(trackId, current), el.code.value);
+    E.runSql(el.code.value, lv.checks).then(function (r) {
+      done(r);
+      el.tableWrap.innerHTML = '';
+      if (r.crash) {
+        el.out.textContent = 'Error: ' + r.crash;
+      } else if (r.rows.length) {
+        var cols = Object.keys(r.rows[0]);
+        var t = document.createElement('table');
+        var thead = document.createElement('thead');
+        var tr = document.createElement('tr');
+        cols.forEach(function (c) { var th = document.createElement('th'); th.textContent = c; tr.appendChild(th); });
+        thead.appendChild(tr);
+        var tb = document.createElement('tbody');
+        r.rows.forEach(function (row) {
+          var trr = document.createElement('tr');
+          cols.forEach(function (c) { var td = document.createElement('td'); td.textContent = row[c]; trr.appendChild(td); });
+          tb.appendChild(trr);
+        });
+        t.appendChild(thead); t.appendChild(tb);
+        el.tableWrap.appendChild(t);
+        el.out.textContent = r.rows.length + ' row' + (r.rows.length === 1 ? '' : 's');
+      } else {
+        el.out.textContent = 'Query ran. 0 rows.';
+      }
+      finishLevel(lv, r.ok && r.results.length > 0 && r.results.every(function (x) { return x.pass; }));
+    });
+  }
+
+  function runLogicLevel(lv) {
+    if (!blockSeq.length) {
+      done({});
+      showChecks([], 'Drop at least one block into the run area.');
+      return;
+    }
+    E.runLogic(blockSeq).then(function (r) {
+      done(r);
+      el.out.textContent = r.out.length ? r.out.join('\n') : '(nothing printed)';
+      var want = lv.target;
+      var have = blockSeq.map(function (b) { return b.kind; });
+      var allPass = want.every(function (k, i) { return have[i] === k; });
+      if (allPass) {
+        var first = E.complete(trackId, lv.id, lv.xp);
+        showChecks([{ name: 'Level complete' + (first ? '  +' + lv.xp + ' XP' : '  (already done)'), pass: true }], null);
+        if (current < track.levels.length - 1) el.next.hidden = false;
+        else el.next.textContent = 'Back to tracks';
+      } else {
+        showChecks([
+          { name: 'Block ' + (want.length) + ' should be: ' + want.join(' then '), pass: false, fail: 'Tap a placed block to remove it and try a different order.' }
+        ], null);
+      }
+    });
+  }
+
+  /* ---------- events ---------- */
+  el.run.addEventListener('click', run);
+  el.hintBtn.addEventListener('click', function () {
+    el.hintText.textContent = track.levels[current].hint || '';
+  });
+  el.resetCode.addEventListener('click', function () {
+    localStorage.removeItem(saveKey(trackId, current));
+    el.code.value = track.levels[current].starter || '';
+    el.out.textContent = 'Editor reset.';
+  });
+  el.next.addEventListener('click', function () {
+    if (current < track.levels.length - 1) load(current + 1);
+    else location.href = 'learn.html';
+  });
+  el.railBack.addEventListener('click', function () { location.href = 'learn.html'; });
+
+  document.addEventListener('keydown', function (e) {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); run(); }
+  });
+
+  el.xp.textContent = E.totalXpEarned();
+  load(findOpenLevel());
+})();
+</script>
+</body>
+</html>

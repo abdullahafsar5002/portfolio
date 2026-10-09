@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Abdullah Afsar &mdash; Software Developer</title>
+<meta name="description" content="Software developer building ERP and dealer portal systems. Electron, Node.js, SQLite, Cloudflare Workers.">
+<meta property="og:title" content="Abdullah Afsar &mdash; Software Developer">
+<meta property="og:description" content="ERP and dealer portal systems. Electron, Node.js, SQLite, Cloudflare Workers.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=Instrument+Sans:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="scroll-progress" aria-hidden="true"></div>
+<nav>
+  <a href="index.html" class="brand">Abdullah Afsar</a>
+  <div class="nav-right">
+<div class="nav-links">
+      <a href="#work">Work</a>
+      <a href="#stack">Stack</a>
+      <a href="learn/learn.html">Code Quest</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <button class="palette-trigger" type="button" data-palette-open title="Jump to (Ctrl+K)">Jump to <span class="k">Ctrl K</span></button>
+    <button class="theme-toggle" type="button" data-theme-toggle aria-pressed="false" aria-label="Switch colour theme">
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+      </svg>
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="4"></circle>
+        <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path>
+      </svg>
+    </button>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-top">
+    <span class="status"><span class="dot"></span>Open to full-time roles</span>
+    <span class="loc">Karachi, Pakistan</span>
+  </div>
+
+  <div class="hero-main">
+    <div class="hero-text">
+      <h1 class="display">Abdullah<br><em>Afsar</em></h1>
+
+      <p class="role">Software Developer &mdash; full-stack, systems &amp; data integrity</p>
+
+      <p class="lede">
+        I build software a business runs on rather than demos it. Right now that
+        is <strong>SkyFlame</strong> &mdash; a twenty-module ERP with a hosted
+        dealer portal, where the database refuses to let stock quantities drift
+        away from the documents that moved them.
+      </p>
+
+      <ul class="stats">
+        <li><span class="stat-num" data-count="20">20</span><span class="stat-label">business modules</span></li>
+        <li><span class="stat-num" data-count="472">472</span><span class="stat-label">automated tests</span></li>
+        <li><span class="stat-num" data-count="4">4</span><span class="stat-label">shipped products</span></li>
+      </ul>
+
+<div class="cta">
+        <a href="learn/learn.html">Try Code Quest - free coding game</a>
+        <a href="https://github.com/whitedevil1566" target="_blank" rel="noopener">GitHub</a>
+        <a href="#contact">Get in touch</a>
+      </div>
+    </div>
+
+    <figure class="hero-portrait">
+      <img src="portrait.jpg" width="560" height="767"
+           alt="Portrait of Abdullah Afsar" decoding="async" fetchpriority="high">
+    </figure>
+  </div>
+</header>
+
+<!-- ============================================================ -->
+<section id="work">
+  <div class="section-head">
+    <span class="section-num">01</span>
+    <h2 class="section-title">Work</h2>
+  </div>
+
+  <article class="work work--card" data-reveal>
+    <div class="work-head">
+      <div>
+        <h3 class="work-title"><a href="project-skyflame.html">SkyFlame ERP &amp; Dealer Portal</a></h3>
+        <p class="work-meta">Asia Gas Appliances, Karachi &middot; 2025&ndash;present &middot; In production</p>
+      </div>
+      <span class="work-badge">Flagship</span>
+    </div>
+    <p class="work-desc">
+      A twenty-module ERP &mdash; sales, purchases, inventory, bill of materials
+      and production, dealer orders, returns, payroll, reporting &mdash; plus a
+      dealer portal on Cloudflare Workers. Stock is an append-only ledger with
+      triggers that reject silent edits.
+    </p>
+    <a class="more" href="project-skyflame.html">Case study &rarr;</a>
+  </article>
+
+  <article class="work work--card" data-reveal>
+    <div class="work-head">
+      <div>
+        <h3 class="work-title"><a href="project-toruk-makto.html">Toruk Makto League</a></h3>
+        <p class="work-meta">torukmaktoleague.com &middot; Live production site</p>
+      </div>
+      <span class="work-badge work-badge--quiet">Live</span>
+    </div>
+    <p class="work-desc">
+      A live digital home for a golf league in Pakistan &mdash; 150 players,
+      6 teams, 3 venues and 2 tournaments, organised so a visitor can find a
+      fixture or a squad without a page load.
+    </p>
+    <a class="more" href="project-toruk-makto.html">Case study &rarr;</a>
+  </article>
+
+  <article class="work work--card" data-reveal>
+    <div class="work-head">
+      <div>
+        <h3 class="work-title"><a href="project-z-lane-broast.html">Z-Lane Broast</a></h3>
+        <p class="work-meta">whitedevil1566.github.io/Z-Lane-Broast &middot; Live</p>
+      </div>
+      <span class="work-badge work-badge--quiet">Live</span>
+    </div>
+    <p class="work-desc">
+      A responsive restaurant experience built around menu clarity, visible
+      pricing and a direct WhatsApp ordering flow instead of a checkout nobody
+      wanted to build.
+    </p>
+    <a class="more" href="project-z-lane-broast.html">Case study &rarr;</a>
+  </article>
+
+  <article class="work work--card" data-reveal>
+    <div class="work-head">
+      <div>
+        <h3 class="work-title"><a href="project-golf-coaching.html">Afsar Ali Golf Coaching</a></h3>
+        <p class="work-meta">coach.abdullahafsar.site &middot; Live</p>
+      </div>
+      <span class="work-badge work-badge--quiet">Live</span>
+    </div>
+    <p class="work-desc">
+      An eight-page coaching site for a Karachi golf professional &mdash; program
+      discovery, pricing, testimonials and a booking path that ends in WhatsApp,
+      where the customer already is.
+    </p>
+<a class="more" href="project-golf-coaching.html">Case study &rarr;</a>
+  </article>
+</section>
+
+<!-- ============================================================ -->
+<section id="shots">
+  <div class="section-head">
+    <span class="section-num">02</span>
+    <h2 class="section-title">Live screens</h2>
+  </div>
+
+  <p class="section-intro">
+    Captured from the public URLs, not from mockups. These are the sites as
+    visitors actually reach them.
+  </p>
+
+  <figure class="shot" data-reveal>
+    <a href="https://torukmaktoleague.com" target="_blank" rel="noopener">
+      <img loading="lazy" decoding="async" alt="Screenshot of the Toruk Makto League website"
+           src="https://image.thum.io/get/width/1400/crop/820/noanimate/https://torukmaktoleague.com/">
+    </a>
+    <figcaption>
+      <span class="shot-name">Toruk Makto League</span>
+      <a href="https://torukmaktoleague.com" target="_blank" rel="noopener">Open live &rarr;</a>
+    </figcaption>
+  </figure>
+
+  <figure class="shot" data-reveal>
+    <a href="https://coach.abdullahafsar.site" target="_blank" rel="noopener">
+      <img loading="lazy" decoding="async" alt="Screenshot of the Afsar Ali Golf Coaching website"
+           src="https://image.thum.io/get/width/1400/crop/820/noanimate/https://coach.abdullahafsar.site/">
+    </a>
+    <figcaption>
+      <span class="shot-name">Afsar Ali Golf Coaching</span>
+      <a href="https://coach.abdullahafsar.site" target="_blank" rel="noopener">Open live &rarr;</a>
+    </figcaption>
+  </figure>
+
+  <figure class="shot" data-reveal>
+    <a href="https://whitedevil1566.github.io/Z-Lane-Broast/" target="_blank" rel="noopener">
+      <img loading="lazy" decoding="async" alt="Screenshot of the Z-Lane Broast website"
+           src="https://image.thum.io/get/width/1400/crop/820/noanimate/https://whitedevil1566.github.io/Z-Lane-Broast/">
+    </a>
+    <figcaption>
+      <span class="shot-name">Z-Lane Broast</span>
+      <a href="https://whitedevil1566.github.io/Z-Lane-Broast/" target="_blank" rel="noopener">Open live &rarr;</a>
+    </figcaption>
+  </figure>
+</section>
+
+<!-- ============================================================ -->
+<section id="stack">
+  <div class="section-head">
+    <span class="section-num">03</span>
+    <h2 class="section-title">Stack</h2>
+  </div>
+
+  <div class="stack">
+    <div class="stack-col">
+      <h4>Backend &amp; data</h4>
+      <p>Node.js / SQLite / better-sqlite3 / SQL / REST API design / schema design &amp; migrations / transactions &amp; foreign keys / database triggers / relational modelling</p>
+    </div>
+    <div class="stack-col">
+      <h4>Frontend</h4>
+      <p>JavaScript (ES6+) / HTML5 / CSS3 / Bootstrap 5 / Electron</p>
+    </div>
+    <div class="stack-col">
+      <h4>Cloud &amp; deployment</h4>
+      <p>Cloudflare Workers / Cloudflare D1 / GitHub Pages / serverless deployment / custom domains &amp; DNS / encrypted backup &amp; restore</p>
+    </div>
+    <div class="stack-col">
+      <h4>Security &amp; quality</h4>
+      <p>scrypt password hashing / session &amp; refresh-token management / credential revocation / Content-Security-Policy / automated &amp; regression testing</p>
+    </div>
+    <div class="stack-col">
+      <h4>Tools</h4>
+      <p>Git / GitHub / VS Code / wrangler CLI / Cloudflare dashboard / debugging</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section id="contact">
+  <div class="section-head">
+    <span class="section-num">04</span>
+    <h2 class="section-title">Contact</h2>
+  </div>
+
+  <p class="section-intro">
+    Open to full-time software development roles and freelance web work.
+    Currently at Asia Gas Appliances while completing a BSc in Computer Science
+    at Ilma University.
+  </p>
+
+  <div class="contact-grid">
+    <div class="contact-info">
+<a href="mailto:abdullahafsar2005@gmail.com">abdullahafsar2005@gmail.com</a>
+      <button class="copy-btn" type="button" data-copy-email="abdullahafsar2005@gmail.com">Copy email</button>
+      <a href="https://wa.me/923278467464" target="_blank" rel="noopener">WhatsApp / +92 327 8467464</a>
+      <a href="https://github.com/whitedevil1566" target="_blank" rel="noopener">github.com/whitedevil1566</a>
+    </div>
+
+<!--
+      EMAIL FORM - posts to Formspree, which forwards to
+      abdullahafsar2005@gmail.com. Works without JavaScript too: the plain
+      POST goes straight through, and script.js upgrades it to fetch() so
+      the page does not reload on success.
+    -->
+    <form class="contact-form" id="contact-form"
+          action="https://formspree.io/f/mdeaznbo" method="POST">
+      <input type="text"  name="name"    placeholder="Name" required>
+      <input type="email" name="email"    placeholder="Email" required>
+      <input type="text"  name="company" placeholder="Company (optional)">
+<textarea name="message" rows="4" placeholder="What are you building?"></textarea>
+      <button type="submit">Send message</button>
+      <p class="form-status" id="form-status" aria-live="polite"></p>
+
+      <!-- Formspree reads these: a subject line and a spam honeypot. The
+           honeypot is hidden from people and traps naive bots. -->
+      <input type="hidden" name="_subject" value="Portfolio enquiry">
+      <input type="text" name="_gotcha" tabindex="-1" autocomplete="off"
+             aria-hidden="true" class="hp">
+    </form>
+
+    <!-- If the endpoint is ever removed or stops working, say so instead of
+         leaving a form that silently fails. -->
+    <p class="form-note" id="form-fallback" hidden>
+      The form could not be reached. Email me at
+      <a href="mailto:abdullahafsar2005@gmail.com">abdullahafsar2005@gmail.com</a>
+      or use WhatsApp.
+    </p>
+  </div>
+</section>
+
+<footer>
+  <span>Abdullah Afsar</span>
+  <span>Software Developer / Karachi</span>
+  <span id="year"></span>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

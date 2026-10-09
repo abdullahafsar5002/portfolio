@@ -1,0 +1,11 @@
+﻿node_modules/
+.vercel/
+.DS_Store
+Thumbs.db
+*.log
+
+# old duplicate of the site, kept locally only
+portfolio-v2/
+
+# editor / agent config
+.claude/
