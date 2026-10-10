@@ -590,9 +590,10 @@ code{font-family:var(--mono);font-size:.9em}
   footer{flex-direction:column;gap:8px}
 
   /* Tap targets: anything clickable gets enough height to hit with a
-     thumb. Padding rather than height so line wrapping still works. */
+     thumb. Padding rather than a fixed height so line wrapping still
+     works and a link with two words still sits on one line. */
   .nav-links a,.cta a,.copy-btn,.theme-toggle,.palette-trigger,
-  .fig a,.work-card a,.pager a,button[type=submit],.contact-form a{
+  .more,.shot figcaption a,.pager a,button[type=submit],.contact-form a{
     min-height:44px;display:inline-flex;align-items:center;
   }
 }

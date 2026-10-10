@@ -196,7 +196,7 @@ section{padding:72px 0;border-bottom:1px solid var(--line)}
   font-family:var(--serif);font-weight:400;font-size:26px;
   padding-bottom:16px;border-bottom:1px solid var(--line);margin-bottom:14px;
 }
-.rail-list{list-style:none;display:flex;flex-direction:column;gap:4px}
+.rail-list{list-style:none;display:flex;flex-direction:column;gap:4px;flex-wrap:wrap}
 .rail-item{
   width:100%;display:flex;align-items:center;gap:11px;
   padding:10px 11px;border-radius:7px;cursor:pointer;
@@ -395,6 +395,17 @@ footer{
   .play{padding:22px 0 44px}
   .lnav-right{gap:11px}
   #code{min-height:260px;font-size:13px}
+
+  /* Tap targets for the phone. */
+  .lnav a,.block,.track,.btn,.hint-btn,.rail-list button,
+  button,.tab{min-height:44px}
+  .lnav a,.block{display:flex;align-items:center}
+
+  /* The level rail is a long column of numbers on a phone. Lay it out as
+     a wrapping row so it does not push the editor off the screen. */
+  .rail-list{display:flex;flex-wrap:wrap;gap:6px}
+  .rail-list li{flex:0 0 auto}
+  .rail-list button{min-width:44px;padding:0 10px}
 }
 
 @media(prefers-reduced-motion:reduce){
