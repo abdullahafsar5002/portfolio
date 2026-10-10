@@ -315,6 +315,18 @@ var TRACKS = {
   },
 
   /* ==========================================================
+     C - real C, interpreted in the browser.
+     No compiler download: c-sim.js parses and runs the code
+     directly. Expected output matches clang exactly.
+     ========================================================== */
+  c: {
+    name: 'C',
+    tag: 'No download',
+    blurb: 'Write real C. It runs in your browser with nothing to download.',
+    levels: []
+  },
+
+  /* ==========================================================
      LOGIC - drag blocks, no typing. For absolute beginners.
      ========================================================== */
   logic: {

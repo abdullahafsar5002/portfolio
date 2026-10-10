@@ -89,12 +89,13 @@
 </footer>
 
 <script src="../script.js"></script>
-<script src="levels.js?v=8"></script>
+<script src="levels.js?v=9"></script>
 <script src="levels-js.js?v=3"></script>
 <script src="levels-logic.js?v=1"></script>
 <script src="levels-web.js?v=1"></script>
 <script src="levels-sql.js?v=1"></script>
-<script src="engine.js?v=8"></script>
+<script src="levels-c.js?v=2"></script>
+<script src="engine.js?v=9"></script>
 <script>
 (function () {
   'use strict';
@@ -107,6 +108,7 @@
   var isLogic = trackId === 'logic';
   var isWeb = trackId === 'web';
   var isSql = trackId === 'sql';
+var isC = trackId === 'c';
 
   var el = {
     rail: document.getElementById('rail'),
@@ -350,6 +352,7 @@
 
     if (isLogic) { runLogicLevel(lv); return; }
     if (isSql) { runSqlLevel(lv); return; }
+    if (isC) { runCLevel(lv); return; }
     if (isWeb) { runWebLevel(lv); return; }
     runJsLevel(lv);
   }
@@ -417,6 +420,19 @@
         ? 'Error: ' + r.crash
         : (r.out.length ? r.out.join('\n') : '(nothing printed)');
       finishLevel(lv, r.ok && r.results.every(function (x) { return x.pass; }) && r.results.length > 0);
+    });
+  }
+
+  function runCLevel(lv) {
+    localStorage.setItem(saveKey(trackId, current), el.code.value);
+    var code = el.code.value;
+    el.out.textContent = 'Running...';
+    E.runC(code, lv.checks).then(function (r) {
+      done(r);
+      el.out.textContent = r.crash
+        ? 'Error: ' + r.crash
+        : (r.out.length ? r.out.join('\n') : '(nothing printed)');
+      finishLevel(lv, r.ok && r.results.length > 0 && r.results.every(function (x) { return x.pass; }));
     });
   }
 

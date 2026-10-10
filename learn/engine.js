@@ -335,6 +335,75 @@
   }
 
   /* ============================================================
+     C RUNNER - the interpreter in c-sim.js.
+     The learner's code goes to a worker so a runaway program can be
+     killed instead of freezing the page, and the console comes back
+     as a list of lines exactly like the JavaScript runner.
+     Nothing is downloaded and nothing leaves the page.
+     ============================================================ */
+  var cWorker = null;
+  var cWorkerJob = 0;
+  var cPending = {};
+
+  function getCWorker() {
+    if (cWorker) return cWorker;
+    cWorker = new Worker('c-sim.js');
+    cWorker.onmessage = function (e) {
+      const job = cPending[e.data.id];
+      if (!job) return;
+      delete cPending[e.data.id];
+      clearTimeout(job.timer);
+      job.resolve(e.data.result);
+    };
+    cWorker.onerror = function (e) {
+      Object.keys(cPending).forEach(function (k) {
+        clearTimeout(cPending[k].timer);
+        cPending[k].resolve({
+          ok: false, error: 'The C interpreter failed to start (' + (e.message || 'error') + ').',
+          lines: []
+        });
+        delete cPending[k];
+      });
+    };
+    return cWorker;
+  }
+
+  function runC(code, tests, timeoutMs) {
+    var worker = getCWorker();
+    var id = ++cWorkerJob;
+    return new Promise(function (resolve) {
+      const timer = setTimeout(function () {
+        if (!cPending[id]) return;
+        delete cPending[id];
+        /* A C program that never ends is stopped here rather than hanging
+           the tab. Rebuild the worker so its state is clean next time. */
+        worker.terminate();
+        cWorker = null;
+        resolve({
+          ok: false,
+          crash: 'Your program ran too long and was stopped. Check for a loop that never ends.',
+          out: [], results: []
+        });
+      }, timeoutMs || 5000);
+
+      cPending[id] = { resolve: resolve, timer: timer };
+      worker.postMessage({ id: id, source: code });
+    }).then(function (r) {
+      if (!r.ok) return { ok: false, crash: r.error, out: [], results: [] };
+      const out = r.lines || [];
+      const results = (tests || []).map(function (c) {
+        let pass = false, err = null;
+        try {
+          const fn = new Function('out', 'return (' + normaliseCheck(c.code) + ');');
+          pass = !!fn(out);
+        } catch (e) { err = String(e.message); }
+        return { name: c.name, pass: pass, fail: c.fail, err: err };
+      });
+      return { ok: true, out: out, results: results };
+    });
+  }
+
+  /* ============================================================
      LOGIC RUNNER - interprets the block sequence the player built
      ============================================================ */
   function runLogic(sequence) {
@@ -397,6 +466,7 @@
     runJs: runJs,
     runWeb: runWeb,
     runSql: runSql,
+    runC: runC,
     runLogic: runLogic,
     reset: function () { state = blank(); save(); }
   };
