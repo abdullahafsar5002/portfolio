@@ -206,9 +206,16 @@ body{
   font:16.5px/1.7 var(--sans);
   -webkit-font-smoothing:antialiased;
   padding:0 28px;
-  overflow-x:hidden;
   transition:background .3s ease,color .3s ease;
 }
+
+/* A grid item that will not shrink is the usual cause of sideways scroll on
+   a phone. Letting content shrink and letting long words break keeps every
+   page inside the viewport without hiding the overflow. */
+img,svg,video,canvas,iframe,table{max-width:100%}
+img,video,canvas,iframe{height:auto}
+a,button,input,textarea,select{max-width:100%}
+pre,code{overflow-wrap:anywhere;word-break:break-word}
 
 a{color:var(--accent);text-decoration:none}
 a:hover{text-decoration:underline}
@@ -224,9 +231,11 @@ nav{
   border-bottom:1px solid var(--line);
   transition:background .3s ease,border-color .3s ease;
 }
+nav,.nav-right,.nav-links{min-width:0}
 .brand{
   font-family:var(--serif);font-size:21px;letter-spacing:.01em;
   color:var(--text);text-decoration:none;
+  white-space:nowrap;
 }
 .nav-right{display:flex;align-items:center;gap:16px}
 .nav-links{display:flex;gap:26px;font-family:var(--mono);font-size:12.5px}
@@ -579,6 +588,23 @@ code{font-family:var(--mono);font-size:.9em}
   .hero-portrait{width:150px;margin:0}
   .cta a{padding:11px 17px;font-size:12.5px}
   footer{flex-direction:column;gap:8px}
+
+  /* Tap targets: anything clickable gets enough height to hit with a
+     thumb. Padding rather than height so line wrapping still works. */
+  .nav-links a,.cta a,.copy-btn,.theme-toggle,.palette-trigger,
+  .fig a,.work-card a,.pager a,button[type=submit],.contact-form a{
+    min-height:44px;display:inline-flex;align-items:center;
+  }
+}
+
+/* Very narrow phones cannot fit a four-item nav plus two buttons on one
+   line, so the links wrap to their own row and stay tappable. */
+@media(max-width:560px){
+  nav{flex-wrap:wrap;row-gap:6px;padding:12px 0}
+  .nav-right{width:100%;justify-content:space-between}
+  .nav-links{flex:1;justify-content:space-between;gap:8px}
+  .nav-links a{padding:8px 0}
+  .brand{width:100%}
 }
 
 @media(prefers-reduced-motion:reduce){
