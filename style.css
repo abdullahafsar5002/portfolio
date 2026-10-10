@@ -574,10 +574,9 @@ code{font-family:var(--mono);font-size:.9em}
 
 /* -- mobile ------------------------------------------------ */
 
-/* A screenshot thumbnail is a link whose box is the image itself. It is
-   already far larger than a minimum tap target, so sizing the <a> is
-   pointless and only makes the caption overlap it. */
-.shot > a{display:block;line-height:0}
+/* A screenshot thumbnail is a link whose box is the image itself. Once the
+   image loads it is a large target, so the link needs no minimum height. */
+.shot > a{display:block}
 
 /* Tap targets. This covers a tablet as well as a phone: a 760px breakpoint
    left an 820px iPad with 24px links. Anything driven by a thumb needs this
