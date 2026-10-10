@@ -573,6 +573,22 @@ code{font-family:var(--mono);font-size:.9em}
 }
 
 /* -- mobile ------------------------------------------------ */
+
+/* A screenshot thumbnail is a link whose box is the image itself. It is
+   already far larger than a minimum tap target, so sizing the <a> is
+   pointless and only makes the caption overlap it. */
+.shot > a{display:block;line-height:0}
+
+/* Tap targets. This covers a tablet as well as a phone: a 760px breakpoint
+   left an 820px iPad with 24px links. Anything driven by a thumb needs this
+   whatever the layout happens to be doing. */
+@media(hover:none),(pointer:coarse),(max-width:900px){
+  .nav-links a,.cta a,.copy-btn,.theme-toggle,.palette-trigger,
+  .more,.shot figcaption a,.pager a,button[type=submit],.contact-info a{
+    min-height:44px;display:inline-flex;align-items:center;
+  }
+}
+
 @media(max-width:760px){
   body{padding:0 20px}
   .hero{padding:62px 0 58px}
@@ -588,14 +604,6 @@ code{font-family:var(--mono);font-size:.9em}
   .hero-portrait{width:150px;margin:0}
   .cta a{padding:11px 17px;font-size:12.5px}
   footer{flex-direction:column;gap:8px}
-
-  /* Tap targets: anything clickable gets enough height to hit with a
-     thumb. Padding rather than a fixed height so line wrapping still
-     works and a link with two words still sits on one line. */
-  .nav-links a,.cta a,.copy-btn,.theme-toggle,.palette-trigger,
-  .more,.shot figcaption a,.pager a,button[type=submit],.contact-form a{
-    min-height:44px;display:inline-flex;align-items:center;
-  }
 }
 
 /* Very narrow phones cannot fit a four-item nav plus two buttons on one
