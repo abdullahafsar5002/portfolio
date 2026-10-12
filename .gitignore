@@ -10,3 +10,6 @@ portfolio-v2/
 # editor / agent config
 .claude/
 c-test.js
+learn/c-check-solutions.js
+learn/c-probe-api.js
+learn/c-solutions.js
